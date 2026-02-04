@@ -1,5 +1,5 @@
 /**
- * 五子棋游戏 v2.1 - 修复版
+ * 五子棋游戏 v2.1 - 修复版 + 登录验证
  */
 
 class GobangGame {
@@ -17,6 +17,7 @@ class GobangGame {
         this.history = [];
         this.stats = { blackWins: 0, whiteWins: 0 };
         this.currentStep = 0;
+        this.isLoggedIn = false;
         
         this.canvas = document.getElementById('chessboard');
         this.ctx = this.canvas.getContext('2d');
@@ -24,11 +25,53 @@ class GobangGame {
         this.gameStatus = document.getElementById('game-status');
         this.restartBtn = document.getElementById('restart-btn');
         this.undoBtn = document.getElementById('undo-btn');
+        this.boardOverlay = document.getElementById('board-overlay');
         
         this.bindEvents();
         this.initBoard();
         this.drawBoard();
         this.updateStatsDisplay();
+        this.checkAuthState();
+    }
+    
+    bindEvents() {
+        this.canvas.addEventListener('click', (e) => this.handleClick(e));
+        this.restartBtn.addEventListener('click', () => this.restart());
+        this.undoBtn.addEventListener('click', () => this.undo());
+        
+        // 监听登录状态变化
+        window.addEventListener('game:authStateChange', (e) => {
+            this.isLoggedIn = e.detail.isLoggedIn;
+            this.updateBoardState();
+        });
+        
+        // 页面加载时检查登录状态
+        window.addEventListener('auth:login', () => {
+            this.isLoggedIn = true;
+            this.updateBoardState();
+        });
+        
+        window.addEventListener('auth:logout', () => {
+            this.isLoggedIn = false;
+            this.updateBoardState();
+        });
+    }
+    
+    checkAuthState() {
+        if (typeof authService !== 'undefined') {
+            this.isLoggedIn = authService.checkLoginStatus();
+            this.updateBoardState();
+        }
+    }
+    
+    updateBoardState() {
+        if (!this.boardOverlay) return;
+        
+        if (this.isLoggedIn) {
+            this.boardOverlay.style.display = 'none';
+        } else {
+            this.boardOverlay.style.display = 'flex';
+        }
     }
     
     initBoard() {
@@ -46,13 +89,13 @@ class GobangGame {
         this.updateUI();
     }
     
-    bindEvents() {
-        this.canvas.addEventListener('click', (e) => this.handleClick(e));
-        this.restartBtn.addEventListener('click', () => this.restart());
-        this.undoBtn.addEventListener('click', () => this.undo());
-    }
-    
     handleClick(e) {
+        // 检查登录状态
+        if (!this.isLoggedIn) {
+            this.showAuthRequired();
+            return;
+        }
+        
         if (this.gameOver) return;
         
         const rect = this.canvas.getBoundingClientRect();
@@ -67,6 +110,22 @@ class GobangGame {
         }
     }
     
+    showAuthRequired() {
+        // 创建或更新提示
+        let tip = document.querySelector('.auth-tip');
+        if (tip) tip.remove();
+        
+        tip = document.createElement('div');
+        tip.className = 'auth-tip';
+        tip.innerHTML = `
+            <span class="tip-icon">🔒</span>
+            <span class="tip-text">请先登录后再下棋</span>
+        `;
+        document.body.appendChild(tip);
+        
+        setTimeout(() => tip.remove(), 2500);
+    }
+    
     isValidPosition(col, row) {
         return col >= 0 && col < this.BOARD_SIZE && 
                row >= 0 && row < this.BOARD_SIZE &&
@@ -74,6 +133,12 @@ class GobangGame {
     }
     
     placePiece(col, row) {
+        // 双重验证登录状态
+        if (!this.isLoggedIn) {
+            this.showAuthRequired();
+            return false;
+        }
+        
         if (!this.isValidPosition(col, row) || this.gameOver) return false;
         
         const player = this.currentPlayer;
@@ -159,6 +224,10 @@ class GobangGame {
     }
     
     undo() {
+        if (!this.isLoggedIn) {
+            this.showAuthRequired();
+            return false;
+        }
         if (this.history.length === 0 || this.gameOver) return false;
         const lastMove = this.history.pop();
         this.board[lastMove.row][lastMove.col] = this.EMPTY;
@@ -170,6 +239,10 @@ class GobangGame {
     }
     
     restart() {
+        if (!this.isLoggedIn) {
+            this.showAuthRequired();
+            return;
+        }
         const overlays = document.querySelectorAll('.winner-overlay');
         overlays.forEach(o => o.remove());
         this.initBoard();
