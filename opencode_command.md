@@ -1,12 +1,13 @@
 # OpenCode 交互命令记录
 
 > 记录所有与 OpenCode 交互的命令和对话
+> **最后更新**: 2026-02-04 11:20
 
 ---
 
-## 开发过程中的 OpenCode 交互
+## 完整交互历史
 
-### 1. 项目初始化
+### 1. 项目初始化 (v1.0)
 
 **时间**: 2026-02-04 10:40
 
@@ -19,7 +20,7 @@
 
 ---
 
-### 2. 项目结构创建
+### 2. 项目结构创建 (v1.0)
 
 **时间**: 2026-02-04 10:42
 
@@ -42,7 +43,7 @@ Use Canvas API for rendering."
 
 ---
 
-### 3. 测试用例编写
+### 3. 测试用例编写 (v1.0)
 
 **时间**: 2026-02-04 10:48
 
@@ -59,7 +60,7 @@ Use Canvas API for rendering."
 
 ---
 
-### 4. 项目文档完善
+### 4. 项目文档完善 (v1.0)
 
 **时间**: 2026-02-04 10:52
 
@@ -109,6 +110,8 @@ Use Canvas API for rendering."
 
 **产物**: `test_win.js`, `DEBUG_LOG.md`
 
+**测试结果**: 7/7 通过
+
 ---
 
 ### 8. 问题记录
@@ -141,73 +144,75 @@ Use Canvas API for rendering."
 
 ---
 
-### 10. v2.0 功能开发 - 修改 game.js
+### 10. v2.0 功能开发 - game.js
 
 **时间**: 2026-02-04 11:18
 
 **交互命令**:
 ```
 "Modify game.js to add v2.0 features:
-
-1. Add score tracking:
-   - this.stats = { blackWins: 0, whiteWins: 0 }
-   - this.currentStep = 0
-
-2. Modify placePiece() to count steps:
-   - Increment currentStep on each move
-   - Pass step count to showWinner()
-
-3. Modify showWinner() to:
-   - Show winner (black/white)
-   - Show how many steps to win
-   - Show current score
+1. Add score tracking: this.stats = { blackWins: 0, whiteWins: 0 }
+2. Add currentStep counter
+3. Modify placePiece() to count steps
+4. Modify showWinner() to:
+   - Show winner, steps, and current score
    - Provide 'Play Again' and 'End Game' buttons
-   - 'Play Again' restarts game and updates score
-   - 'End Game' closes popup without restarting
-
-4. Add closePopup() method to close without restart
-
-5. Update UI to display score in game info area
-
-Keep all existing functionality. Update style.css for new UI."
+   - Play Again restarts and updates score
+   - End Game closes popup without restart
+5. Add closePopup() method
+6. Add updateStatsDisplay() for score UI"
 ```
 
-**预期产物**: 
-- `game.js` - 添加计分和弹窗功能
-- `style.css` - 添加比分显示样式
+**产物**: `game.js` (v2.0), `game_v2.js` (备份)
 
 ---
 
-### 11. v2.0 功能测试
+### 11. v2.0 样式开发 - style.css
 
-**时间**: 2026-02-04 11:XX
+**时间**: 2026-02-04 11:18
+
+**交互命令**:
+```
+"Create style_v2.css with:
+1. Score board display
+2. Enhanced winner popup with steps and score
+3. Two action buttons in popup
+4. Responsive design improvements"
+```
+
+**产物**: `style.css` (v2.0), `style_v2.css` (备份)
+
+---
+
+### 12. v2.0 功能测试
+
+**时间**: 2026-02-04 11:20
 
 **交互命令**:
 ```
 "Create test_v2.js to test v2.0 features:
-1. Score tracking (black wins, white wins)
-2. Step counting
-3. Victory popup with correct info
-4. Play Again button resets and updates score
-5. End Game button closes popup without restart"
+1. Score tracking initialization
+2. Black player win scoring
+3. White player win scoring
+4. Multi-game score tracking
+5. Step counting
+6. End game functionality"
 ```
 
-**预期产物**: `test_v2.js`
+**产物**: `test_v2.js`
+
+**测试结果**: 6/6 通过
 
 ---
 
-### 12. 更新文档
+## 统计信息
 
-**时间**: 2026-02-04 11:XX
-
-**交互命令**:
-```
-"Update all project documents:
-- DEVELOPMENT_LOG.md - Add v2.0 development log
-- opencode_command.md - Add all v2.0 interactions"
-```
-
-**预期产物**: 更新后的文档
+| 指标 | 数量 |
+|------|------|
+| 总交互次数 | 12 次 |
+| 创建文件数 | 18 个 |
+| 测试用例数 | 13+ 个 |
+| 测试通过率 | 100% |
 
 ---
 
@@ -240,14 +245,53 @@ opencode run "Create DOCUMENT"
 
 ---
 
-## 记录规则
+## 最佳实践
 
-- 每个交互命令都要记录
-- 记录时间、命令、响应、产物
-- 保留成功和失败的案例
-- 定期更新常用命令模板
+### 1. 需求定义
+- 详细描述功能需求
+- 明确输入输出
+- 定义验收标准
+
+### 2. 代码生成
+- 分步骤生成复杂功能
+- 包含代码示例
+- 保留现有功能
+
+### 3. 测试验证
+- 先写测试再开发（TDD）
+- 边界情况测试
+- 集成测试
+
+### 4. 文档维护
+- 记录所有交互
+- 保存产物路径
+- 定期更新
+
+---
+
+## 常见问题
+
+### Q: OpenCode 生成代码有错误怎么办？
+A: 
+1. 运行测试定位错误
+2. 让 OpenCode 修复具体错误
+3. 重新测试验证
+
+### Q: 如何确保代码质量？
+A:
+1. 编写单元测试
+2. 进行代码审查
+3. 运行集成测试
+4. 手动验收测试
+
+### Q: 交互命令太长怎么办？
+A:
+1. 拆分成多个小命令
+2. 使用文件传递需求
+3. 分步骤执行
 
 ---
 
 *创建时间: 2026-02-04*
-*最后更新: 2026-02-04 11:18*
+*最后更新: 2026-02-04 11:20*
+*版本: 2.0*
