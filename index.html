@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五子棋 - 网页版</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>五子棋</h1>
+        
+        <div class="game-info">
+            <div class="current-player">
+                <span>当前玩家：</span>
+                <span id="player-indicator" class="black-player">● 黑棋</span>
+            </div>
+            <div class="game-status" id="game-status">游戏进行中</div>
+        </div>
+
+        <div class="board-container">
+            <canvas id="chessboard" width="600" height="600"></canvas>
+        </div>
+
+        <div class="controls">
+            <button id="restart-btn" class="btn">重新开始</button>
+            <button id="undo-btn" class="btn">悔棋</button>
+        </div>
+
+        <div class="instructions">
+            <h3>游戏规则</h3>
+            <ul>
+                <li>黑白双方轮流落子</li>
+                <li>率先连成五子的一方获胜</li>
+                <li>横、竖、斜向均可连子</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
