@@ -323,6 +323,12 @@ class GobangGame {
         const whiteScore = this.stats.whiteWins;
         this.gameStatus.textContent = `${winnerName} 获胜！`;
         
+        // 触发撒花动画
+        setTimeout(() => {
+            const confetti = getConfettiAnimation();
+            confetti.quickBurst();
+        }, 300);
+        
         const overlay = document.createElement('div');
         overlay.className = 'winner-overlay';
         const message = document.createElement('div');
